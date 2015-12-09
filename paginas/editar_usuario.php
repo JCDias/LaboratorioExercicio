@@ -248,11 +248,11 @@ function exibirCampos(valor){
 						</div>
 						<div class="form-inline" >
 							<label>CPF:</label>
-							<input type="text" name="cpf" value = "<?php echo utf8_encode($usuario['cpf']); ?>" id="cpf" class="form-control" placeholder="000.000.000-00." onblur="validarCPF(this.value,this);" required>
+							<input type="text" name="cpf" value = "<?php echo utf8_encode($usuario['cpf']); ?>" id="cpf" class="form-control" placeholder="000.000.000-00." onblur="validarCPF(this.value,this);" >
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<label>RG:</label>
-							<input type="text" name="rg" value = "<?php echo utf8_encode($usuario['rg']); ?>" class="form-control" placeholder="Digite o RG." required />
+							<input type="text" name="rg" value = "<?php echo utf8_encode($usuario['rg']); ?>" class="form-control" placeholder="Digite o RG."  />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<label>Data de nascimento:</label>
@@ -269,11 +269,11 @@ function exibirCampos(valor){
 						<br/>
 						<div class="form-group">
 							<label>Rua</label>
-							<input type="text" name="rua" value = "<?php echo utf8_encode($usuario['rua']); ?>" class="form-control" placeholder="Digite o nome noma da rua" required />
+							<input type="text" name="rua" value = "<?php echo utf8_encode($usuario['rua']); ?>" class="form-control" placeholder="Digite o nome noma da rua"  />
 						</div>
 						<div class="form-inline" >
 							<label>Número:</label>
-							<input type="text" name="numero" value = "<?php echo utf8_encode($usuario['numero']); ?>" class="form-control" placeholder="Digite o número" onkeypress='return SomenteNumero(event)' maxlength="8" required>
+							<input type="text" name="numero" value = "<?php echo utf8_encode($usuario['numero']); ?>" class="form-control" placeholder="Digite o número" onkeypress='return SomenteNumero(event)' maxlength="8" >
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<label>Complemento:</label>
@@ -281,7 +281,7 @@ function exibirCampos(valor){
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<label>Bairro:</label>
-							<input type="text" name="bairro" value = "<?php echo utf8_encode($usuario['bairro']); ?>" class="form-control" placeholder="Digite o bairro" required />
+							<input type="text" name="bairro" value = "<?php echo utf8_encode($usuario['bairro']); ?>" class="form-control" placeholder="Digite o bairro"  />
 							&nbsp;
 							
 							<label>Cidade:</label>
@@ -294,7 +294,7 @@ function exibirCampos(valor){
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<label>Celular:</label>
-							<input type="text" name="celular" value = "<?php echo utf8_encode($usuario['celular']); ?>" id="celular" class="form-control" placeholder="(00) 0000-0000"  required/>
+							<input type="text" name="celular" value = "<?php echo utf8_encode($usuario['celular']); ?>" id="celular" class="form-control" placeholder="(00) 0000-0000"  />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<label>Outro Telefone:</label>
@@ -321,6 +321,9 @@ function exibirCampos(valor){
 									<option value="<?php echo utf8_encode($usuario['tipo']);?>"><?php echo utf8_encode($usuario['tipo']);?></option>
 									<option value="Mensalista">Mensalista</option>
 									<option value="Diarista">Diarista</option>
+									<option value="Outro">Outro</option>
+									<option value="Inativo">Inativo</option>
+									<option value="Monitor(a)">Monitor(a)</option>
 								</select>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<span id="exibir_campos">

@@ -8,14 +8,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h3>Settings</h3>
+                    <h3>Sair</h3>
                 </div>
                 <div class="modal-body">
-                    <p>Here settings can be configured...</p>
+                    <p>Tem certeza que deseja sair?</p>
                 </div>
                 <div class="modal-footer">
                     <a href="#" class="btn btn-default" data-dismiss="modal">Não</a>
-                    <a href="#" class="btn btn-primary" data-dismiss="modal">Save changes</a>
+                    <a href="logout.php" class="btn btn-primary" >Sim</a>
                 </div>
             </div>
         </div>

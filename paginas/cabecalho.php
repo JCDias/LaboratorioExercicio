@@ -84,7 +84,7 @@ function sair() {
                 <ul class="dropdown-menu">
                     <li><a href="editar_login.php?id=<?php echo $_SESSION["id"];?>">Editar Perfil</a></li>
                   <li class="divider"></li>
-                    <li><a href="javascript:sair();">Sair</a></li>
+                    <li class="btn-setting"><a href="">Sair</a></li>
                 </ul>
             </div>
             <!-- user dropdown ends -->
@@ -192,6 +192,8 @@ function sair() {
 								<li><a href="selecionar_data_rel_diario.php"><i class="glyphicon glyphicon-file"></i><span> Diário</span></a></li>
 								<li><a href="selecionar_data_rel_semanal.php"><i class="glyphicon glyphicon-tasks"></i><span> Semanal</span></a></li>
 								<li><a href="javascript:window.open('relatorios/relatorio_todos_usuarios.php','_blank','toolbar=no,Location=no,menubar=no');location.href = document.URL;"><i class="glyphicon glyphicon-list-alt"></i><span> Usuários</span></a></li>
+								<li><a href="javascript:window.open('relatorios/relatorio_usuarios_inativos.php','_blank','toolbar=no,Location=no,menubar=no');location.href = document.URL;"><i class="glyphicon glyphicon-list-alt"></i><span> Inativos</span></a></li>
+								<li><a href="javascript:window.open('relatorios/relatorio_ver_horarios.php','_blank','toolbar=no,Location=no,menubar=no');location.href = document.URL;"><i class="glyphicon glyphicon-time"></i><span> Horários</span></a></li>
 								<li><a href="selecionar_data_rel_frequencia.php"><i class="glyphicon glyphicon-tasks"></i><span> Frequência</span></a></li>
                             </ul>
                         </li>
@@ -206,10 +208,11 @@ function sair() {
 								<li><a href="listar_login.php"><i class="glyphicon glyphicon-search"></i><span> Consultar</span></a></li>
                             </ul>
                         </li>
+						<li><a class="ajax-link" href="backup.php"><span><i class="glyphicon glyphicon-download-alt"></i> Backup</span></a>
 						<?php endif; ?>
 						<!-- Fim exibir este menu somente se for administrador -->
 						<li><a class="ajax-link" href="editar_login.php?id=<?php echo $_SESSION["id"];?>"><i class="glyphicon glyphicon-edit"></i><span> Editar Perfil</span></a>
-						<li><a class="ajax-link" href="javascript:sair();"><span><i class="glyphicon glyphicon-off"></i> Sair</span></a>
+						<li class="btn-setting"><a class="ajax-link" href="#"><span><i class="glyphicon glyphicon-off"></i> Sair</span></a>
                     </ul>
                 </div>
             </div>

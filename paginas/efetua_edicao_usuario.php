@@ -71,9 +71,13 @@
 	$sql_atualizar = "UPDATE `usuarios` SET `nome`='$nome',`cpf`='$cpf',`rg`='$rg',`data_nasc`='$data_nasc',`sexo`='$sexo',`rua`='$rua',`numero`='$numero',`complemento`='$complemento',`bairro`='$bairro',`cidade`='$cidade',`telefone`='$telefone',`celular`='$celular',`outro_telefone`='$outro_telefone',`email`='$email',`tipo`='$tipo',`dia_vencimento`='$dia_venc',`horario`='$horario',`categoria_fk`='$categoria' WHERE id_usuario = '$id'";
 	//Fim Preparar consulta para atualizar
 	
-	$sql = "select count(cpf) from usuarios where cpf = '$cpf';";
-	$consulta = mysql_query($sql,$db);
-	$res = mysql_fetch_array($consulta);
+	if($cpf !=''){
+		$sql = "select count(cpf) from usuarios where cpf = '$cpf';";
+		$consulta = mysql_query($sql,$db);
+		$res = mysql_fetch_array($consulta);
+	}else{
+		$res['count(cpf)'] = 1;
+	};
 	
 	if($res['count(cpf)']==1){	
 		//Atualizar usuário
@@ -81,7 +85,7 @@
 		//Selecionar usuário inserido
 		$selecionar = mysql_query("select * from usuarios where cpf = '$cpf' order by nome DESC", $db);
 		$linha = mysql_fetch_array($selecionar);
-		$id = $linha['id_usuario'];
+		//$id = $linha['id_usuario'];
 		//Mensagem de sucesso ou erro
 		if($confirmar == 1){
 			echo '<div class="box-content alerts">
@@ -90,6 +94,14 @@
 						Atualização realizado com sucesso!
 					</div>
 				  </div>';
+			//Atualizar a data de cadastro para quando ficou inativo
+			if($tipo == 'Inativo'){
+				
+				$funcionario = $_SESSION['usuario'];
+				$atualizar = "UPDATE `usuarios` SET `data_cadastro`= now() , `funcionario` = '$funcionario' WHERE id_usuario = $id";
+				$teste = mysql_query($atualizar,$db);
+			}
+			//Fim atualizar a data de cadastro para quando ficou inativo
 			echo '<a href="consultar_usuarios.php"><button class="btn btn-success">Ok!</button></a>';
 		}else{
 			echo '<div class="box-content alerts">

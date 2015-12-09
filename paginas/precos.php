@@ -15,6 +15,13 @@
 	$sql_men = mysql_query("select id_preco_mensalidade, horario, valor, desconto, c.nome_categoria from preco_mensalidade join categorias c on c.id_categoria = categoria_fk order by c.nome_categoria,horario;",$db);
 	//Fim Selecionar preço mensalidade
 	
+	//Selecionar preço Avaliação
+	$sql_ava = mysql_query("SELECT * FROM `preco_avaliacao` join categorias on categoria_fk = id_categoria order by nome_categoria;",$db);
+	//Fim Selecionar preço Avaliação
+	//Selecionar preço Avaliação
+	$sql_reava = mysql_query("SELECT * FROM `preco_reavaliacao` join categorias on categoria_fk = id_categoria order by nome_categoria;",$db);
+	//Fim Selecionar preço Avaliação
+	
 ?>
 <!-- editar -->
 <script>
@@ -22,6 +29,28 @@ function editar_mens(id){
 	var res = confirm("Deseja realmente editar este preço?");
 	if(res){
 		location.href="editar_mens.php?id="+id;
+	}
+}
+</script>
+<!-- Fim editar -->
+
+<!-- editar -->
+<script>
+function editar_reavaliacao(id){
+	var res = confirm("Deseja realmente editar este preço?");
+	if(res){
+		location.href="editar_preco_reavalicao.php?id="+id;
+	}
+}
+</script>
+<!-- Fim editar -->
+
+<!-- editar -->
+<script>
+function editar_avaliacao(id){
+	var res = confirm("Deseja realmente editar este preço?");
+	if(res){
+		location.href="editar_preco_avaliacao.php?id="+id;
 	}
 }
 </script>
@@ -138,13 +167,13 @@ function editar_diaria(id){
                 </div>
             </div>
         </div>
-		</div>
+		<!--</div>-->
         <!--/span-->
 
 			<!-- Fim Painel Diária -->
 			
-			<!-- Painel Avaliação Física 
-		<div class="box-content row">
+			<!-- Painel Avaliação Física -->
+		<!--<div class="box-content row">-->
 			<div class="box col-md-6">
             <div class="box-inner">
                 <div class="box-header well" data-original-title="">
@@ -154,30 +183,25 @@ function editar_diaria(id){
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Username</th>
-                            <th>Date registered</th>
-                            <th>Role</th>
-                            <th>Status</th>
+                            <th>Categoria</th>
+                            <th>Valor</th>
+							<?php if($_SESSION['privilegio'] == 1){
+								echo '<th>Opção</th>';
+							}
+                            ?>  
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Muhammad Usman</td>
-                            <td class="center">2012/01/01</td>
-                            <td class="center">Member</td>
-                            <td class="center">
-                                <span class="label-success label label-default">Active</span>
-                            </td>
+                        <?php while($ava = mysql_fetch_array($sql_ava)):?>
+						<tr>
+                            <td><?php echo utf8_encode($ava['nome_categoria']);?></td>
+                            <td class="center">R$ <?php echo utf8_encode($ava['valor']);?></td>
+							<?php if($_SESSION['privilegio'] == 1){
+							echo '<td class="center"><a href="javascript:editar_avaliacao('.$ava['id_preco_avaliacao'].')" ><span class="label-default label">Editar</a></span></td>';
+							}
+                            ?>
                         </tr>
-                        <tr>
-                            <td>White Horse</td>
-                            <td class="center">2012/02/01</td>
-                            <td class="center">Staff</td>
-                            <td class="center">
-                                <span class="label-default label label-danger">Banned</span>
-                            </td>
-                        </tr>
-                        
+                        <?php endwhile;?>
                         </tbody>
                     </table>
                     
@@ -186,10 +210,10 @@ function editar_diaria(id){
         </div>
         <!--/span-->
 
-			<!-- Fim Painel Avaliação Física 
+			<!-- Fim Painel Avaliação Física -->
+			
 			<!-- Painel Reavaliação Física -->
 			 <div class="box col-md-6">
-			 <!--
             <div class="box-inner">
                 <div class="box-header well" data-original-title="">
                     <h2>Reavaliação Física</h2>
@@ -198,30 +222,25 @@ function editar_diaria(id){
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Username</th>
-                            <th>Date registered</th>
-                            <th>Role</th>
-                            <th>Status</th>
+                            <th>Categoria</th>
+                            <th>Valor</th>
+							<?php if($_SESSION['privilegio'] == 1){
+								echo '<th>Opção</th>';
+							}
+                            ?>  
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Muhammad Usman</td>
-                            <td class="center">2012/01/01</td>
-                            <td class="center">Member</td>
-                            <td class="center">
-                                <span class="label-success label label-default">Active</span>
-                            </td>
+                        <?php while($reava = mysql_fetch_array($sql_reava)):?>
+						<tr>
+                            <td><?php echo utf8_encode($reava['nome_categoria']);?></td>
+                            <td class="center">R$ <?php echo utf8_encode($reava['valor']);?></td>
+							<?php if($_SESSION['privilegio'] == 1){
+							echo '<td class="center"><a href="javascript:editar_reavaliacao('.$reava['id_preco_reavaliacao'].')" ><span class="label-default label">Editar</a></span></td>';
+							}
+                            ?>
                         </tr>
-                        <tr>
-                            <td>White Horse</td>
-                            <td class="center">2012/02/01</td>
-                            <td class="center">Staff</td>
-                            <td class="center">
-                                <span class="label-default label label-danger">Banned</span>
-                            </td>
-                        </tr>
-                        
+                        <?php endwhile;?>
                         </tbody>
                     </table>
                     
@@ -233,7 +252,6 @@ function editar_diaria(id){
 
 			<!-- Fim Painel Reavaliação Física -->
 			<?php if($_SESSION['privilegio']==1){?>
-			</div>
 			<p align="center">
 				<a href="cad_preco_mensalidade.php"><button type="button" class="btn btn-success">Mensalidade</button></a>
 				<a href="cad_preco_diaria.php"><button type="button" class="btn btn-success">Diária</button></a>
@@ -241,6 +259,7 @@ function editar_diaria(id){
 				<a href="cad_preco_reavaliacao.php"><button type="button" class="btn btn-success">Reavaliação Física</button></a>
 			</p>
 			<?php }?>
+			</div>
 		</div>
 		</div>
     </div><!--/span-->

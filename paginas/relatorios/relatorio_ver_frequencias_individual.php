@@ -79,7 +79,7 @@ $fill = false;
 foreach($sql as $resultado){
 	$pdf->Cell(6,1,$resultado["date_format(data_presenca,'%d/%m/%Y')"],'LR',0,'C',$fill);
 	$pdf->Cell(6,1,$resultado["date_format(data_presenca,'%H:%i:%s')"],'LR',0,'C',$fill);
-	$pdf->Cell(7,1,utf8_decode(utf8_encode($resultado['funcionario'])),'LR',0,'L',$fill);
+	$pdf->Cell(7,1,utf8_decode($resultado['funcionario']),'LR',0,'L',$fill);
 	$pdf->Ln();
 	$fill = !$fill;
 	}
@@ -88,7 +88,7 @@ foreach($sql as $resultado){
 	$pdf->Cell(7,1,$qtd['count(*)'],1,0,'C',true);
 	
 //Fim exibindo os dados
-
-$pdf->Output();
+$nome_relatorio = 'Relatório de Frequeências Individual '.date('d-m-Y').'.pdf';
+$pdf->Output($nome_relatorio,'I');
 
 ?>

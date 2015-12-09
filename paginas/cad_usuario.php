@@ -239,11 +239,11 @@ function exibirCampos(valor){
 						</div>
 						<div class="form-inline" >
 							<label>CPF:</label>
-							<input type="text" name="cpf" id="cpf" class="form-control" placeholder="000.000.000-00." onblur="validarCPF(this.value,this);" required>
+							<input type="text" name="cpf" id="cpf" class="form-control" placeholder="000.000.000-00." onblur="validarCPF(this.value,this);" />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<label>RG:</label>
-							<input type="text" name="rg" class="form-control" placeholder="Digite o RG." required />
+							<input type="text" name="rg" class="form-control" placeholder="Digite o RG." />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<label>Data de nascimento:</label>
@@ -264,7 +264,7 @@ function exibirCampos(valor){
 						</div>
 						<div class="form-inline" >
 							<label>Número:</label>
-							<input type="text" name="numero" class="form-control" placeholder="Digite o número" onkeypress='return SomenteNumero(event)' maxlength="8" required>
+							<input type="text" name="numero" class="form-control" placeholder="Digite o número" onkeypress='return SomenteNumero(event)' maxlength="8" >
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<label>Complemento:</label>
@@ -272,7 +272,7 @@ function exibirCampos(valor){
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<label>Bairro:</label>
-							<input type="text" name="bairro" class="form-control" placeholder="Digite o bairro" required />
+							<input type="text" name="bairro" class="form-control" placeholder="Digite o bairro"  />
 							&nbsp;
 							
 							<label>Cidade:</label>
@@ -312,6 +312,8 @@ function exibirCampos(valor){
 									<option value="">Selecione ...</option>
 									<option value="Mensalista">Mensalista</option>
 									<option value="Diarista">Diarista</option>
+									<option value="Outro">Outro</option>
+									<option value="Monitor(a)">Monitor(a)</option>
 								</select>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<!-- local destinado  exibir os campos dia e horario -->

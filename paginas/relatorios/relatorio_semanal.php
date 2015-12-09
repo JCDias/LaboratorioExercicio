@@ -1,6 +1,7 @@
 ﻿<?php
 require('FPDF/fpdf.php');
 require('conexao_relatorios.php');
+require('../../conexao.php');
 
 //Definindo Data
 setlocale(LC_TIME, 'portuguese');
@@ -16,7 +17,7 @@ $fim = $_GET['fim'];
 
 if($turno == 1){
 	$h1 = '05:00:00';
-	$h2 = '13:00:00';
+	$h2 = '13:59:59';
 	$nome_turno = 'Turno: Matutino';
 }elseif($turno == 2){
 	$h1 = '14:00:00';
@@ -66,7 +67,7 @@ $pdf->AddPage();
 $sql = $pdo->prepare("select caixa.tipo, caixa.funcionario, valor_recebido, u.nome, date_format(data_recebimento,'%d/%m/%Y %H:%i:%s') 
 from caixa join usuarios u on u.id_usuario = usuario_fk 
 where date_format(data_recebimento,'%H:%i:%s') > '$h1' and date_format(data_recebimento,'%H:%i:%s') < '$h2' and date_format(data_recebimento,'%d-%m-%Y') >= '$inicio' and date_format(data_recebimento,'%d-%m-%Y') <= '$fim'
-order by data_recebimento;"); // consulta
+order by data_recebimento ASC;"); // consulta
 $sql->execute();// executar
 //Fim Criando a conexão pelo PDO
 
@@ -87,7 +88,7 @@ $hifen = '-' ;
 	$pdf->Cell(0,1,utf8_decode('LABORATÓRIO DO EXERCÍCIO - CURSO DE EDUCAÇÃO FÍSICA'),1,1,'C',true);
 	$pdf->Cell(0,1,utf8_decode($nome_turno),1,1,'C',false);
 	$pdf->Cell(0,1,utf8_decode('UNIMONTES '.$hifen.' CAMPUS AVANÇADO DE JANUÁRIA'),1,1,'C',true);
-	$pdf->Cell(0,1,utf8_decode(utf8_encode(ucfirst($data))),1,1,'L',false);
+	$pdf->Cell(0,1,utf8_decode('Período: '.$inicio.' à '.$fim),1,1,'C',false);
 	$pdf->Cell(4,1,utf8_decode('Data'),1,0,'C',true);
 	$pdf->Cell(8,1,utf8_decode('Cliente'),1,0,'C',true);
 	$pdf->Cell(4,1,utf8_decode('Tipo'),1,0,'C',true);
@@ -107,16 +108,24 @@ foreach($sql as $resultado){
 	$pdf->Cell(8,1,' '.$resultado['nome'],'LR',0,'L',$fill);
 	$pdf->Cell(4,1,$resultado['tipo'],'LR',0,'C',$fill);
 	$pdf->Cell(4,1,'R$ '.$resultado['valor_recebido'],'LR',0,'C',$fill);
-	$pdf->Cell(7.7,1,utf8_decode(utf8_encode(' '.$resultado['funcionario'])),'LR',0,'L',$fill);
+	$pdf->Cell(7.7,1,utf8_decode(' '.$resultado['funcionario']),'LR',0,'L',$fill);
 	$pdf->Ln();
 	$fill = !$fill;
 	}
-	$pdf->Cell(27.7,0,'','T');
+	//Exibir a soma
+	$sum = "select sum(valor_recebido) from caixa join usuarios u on u.id_usuario = usuario_fk 
+where date_format(data_recebimento,'%H:%i:%s') > '$h1' and date_format(data_recebimento,'%H:%i:%s') < '$h2' and date_format(data_recebimento,'%d-%m-%Y') >= '$inicio' and date_format(data_recebimento,'%d-%m-%Y') <= '$fim';";
+	$soma = mysql_fetch_array(mysql_query($sum, $db));
+	$pdf->Cell(20,1,'Total Recebido: ',1,0,'R',true);
+	$pdf->Cell(7.7,1,'R$ '.$soma['sum(valor_recebido)'],1,1,'C');
+	//Exibir a soma
+	//$pdf->Cell(27.7,0,'','T');
 	$pdf->Ln(2);
 	$pdf->Cell(0,0,'_____________________________________________',0,1,'C');
 	$pdf->Cell(0,1,utf8_decode('Responsável'),0,1,'C');
 //Fim exibindo os dados
 
-$pdf->Output();
+$nome_relatorio = 'Relatório Semanal '.$inicio.' à '.$fim.'.pdf';
+$pdf->Output($nome_relatorio,'I');
 
 ?>

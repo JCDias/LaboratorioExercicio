@@ -36,7 +36,7 @@
 	if($intervalo_mes>=1){
 		// Selecionar todos os usuários mensalistas e inserir na tabela mensalidade
 		
-		$sql_usuario = "select u.id_usuario, u.horario, u.dia_vencimento, u.categoria_fk, u.nome, p.valor, p.desconto from usuarios u join preco_mensalidade p on u.categoria_fk = p.categoria_fk where u.tipo = 'Mensalista';";
+		$sql_usuario = "select u.id_usuario, u.horario, u.dia_vencimento, u.categoria_fk, u.nome, p.valor, p.desconto from usuarios u join preco_mensalidade p on u.categoria_fk = p.categoria_fk and u.horario = p.horario where u.tipo = 'Mensalista';";
 		$query_usuario = mysql_query($sql_usuario,$db);
 		while($usuario = mysql_fetch_array($query_usuario)){
 			// Fazer if aki para meses com 30 dias e mes de fevereiro

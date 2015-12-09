@@ -14,9 +14,9 @@
 	$date = date('Y-m-d H:i:s');
 	
 	//Selecionar categoria para combo box
-	$sql="select id_categoria,nome_categoria from categorias order by nome_categoria;";
+	//$sql="select id_categoria,nome_categoria from categorias order by nome_categoria;";
 	
-	$cons = mysql_query($sql,$db);
+	//$cons = mysql_query($sql,$db);
 	
 ?>
 
@@ -27,6 +27,63 @@ function casas(valor,campo){
 	campo.value = valor_formatado;
 }
 </script>
+
+<!-- script pesquisa em tempo real -->
+<script>
+//função para pegar o objeto ajax do navegador
+function xmlhttp()
+{
+	// XMLHttpRequest para firefox e outros navegadores
+	if (window.XMLHttpRequest)
+	{
+		return new XMLHttpRequest();
+	}
+
+	// ActiveXObject para navegadores microsoft
+	var versao = ['Microsoft.XMLHttp', 'Msxml2.XMLHttp', 'Msxml2.XMLHttp.6.0', 'Msxml2.XMLHttp.5.0', 'Msxml2.XMLHttp.4.0', 'Msxml2.XMLHttp.3.0','Msxml2.DOMDocument.3.0'];
+	for (var i = 0; i < versao.length; i++)
+	{
+		try
+		{
+			return new ActiveXObject(versao[i]);
+		}
+		catch(e)
+		{
+			alert("Seu navegador não possui recursos para o uso do AJAX!");
+		}
+	} // fecha for
+	return null;
+} // fecha função xmlhttp
+
+//função para fazer a requisição da página que efetuará a consulta no DB
+function carregar()
+{
+   busca = document.getElementById('tipo').value;
+   id = document.getElementById('usuario_fk').value;
+   var url = 'buscar_preco_lancamento.php?busca='+busca+'&id='+id;
+   ajax = xmlhttp();
+   if (ajax)
+   {
+	   document.getElementById('resultados').style.display = "inline";
+	   ajax.open('get',url, true);
+	   ajax.onreadystatechange = trazconteudo; 
+	   ajax.send(null);
+   }
+}
+
+//função para incluir o conteúdo na pagina
+function trazconteudo()
+{
+	if (ajax.readyState==4)
+	{
+		if (ajax.status==200)
+		{
+			document.getElementById('valor').innerHTML = ajax.responseText;
+		}
+	}
+}
+</script>
+<!-- fim script pesquisa -->
 
 <!-- breadcrumb -->
 <div>
@@ -55,29 +112,29 @@ function casas(valor,campo){
 					<form action="cadastrar_lancamento.php" method="POST">
 							<div class="form-group" >
 								<label>Tipo de Entrada:</label>
-								<select name="tipo" data-rel="chosen" required >
+								<select name="tipo" id="tipo" data-rel="chosen" onchange="carregar();" required>
 									<option value="">Selecione ...</option>
-									<option value="Avaliação Física">Avaliação Física</option>
-									<option value="Reavaliação Física">Revaliação Física</option>
-									<option value="Mensalidade">1ª Mensalidade</option>
+									<option value="1">Avaliação Física</option>
+									<option value="2">Reavaliação Física</option>
 								</select>
 							</div>
-							<div class="form-group" >
-								<label>Nome: </label>
-								<input type="text"  class="form-control" value="<?php echo utf8_encode($usuario['nome']);?>" disabled />
-							</div>
-							<div class="form-group" >
-								<label>Categoria</label>
-								<input type="text"  class="form-control" value="<?php echo utf8_encode($usuario['nome_categoria']);?>" disabled  />
-							</div>
-							<div class="form-group" >
-								<label>Valor:(R$)</label>
-								<input type="text" name="valor" id="valor"  class="form-control" placeholder="Informe o valor no formato 00.00" onblur='casas(this.value,this)' />
-							</div>
-						
+							<div id="resultados" style="display:none">
+								<div class="form-group" >
+									<label>Nome: </label>
+									<input type="text"  class="form-control" value="<?php echo utf8_encode($usuario['nome']);?>" disabled />
+								</div>
+								<div class="form-group" >
+									<label>Categoria</label>
+									<input type="text"  class="form-control" value="<?php echo utf8_encode($usuario['nome_categoria']);?>" disabled  />
+								</div>
+									<label>Valor:(R$)</label>
+								<div class="form-group" id="valor">
+									<!-- valor aparece aki -->
+								</div>
+						</div>
 						<input type="hidden" name="funcionario" value="<?php echo utf8_encode($_SESSION['usuario'])?>" />
 						<input type="hidden" name="nome" value="<?php echo utf8_encode($usuario['nome'])?>" />
-						<input type="hidden" name="usuario_fk" value="<?php echo utf8_encode($usuario['id_usuario'])?>" />
+						<input type="hidden" name="usuario_fk" id="usuario_fk" value="<?php echo utf8_encode($usuario['id_usuario'])?>" />
 											
 						<br/>
 						<button type="submit" class="btn btn-success">Registrar</button>

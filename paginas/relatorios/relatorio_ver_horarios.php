@@ -9,9 +9,6 @@ $date = date('d-m-Y');
 $data =  strftime("%A, %d de %B de %Y", strtotime($date));
 // fim Definindo Data
 
-$inicio = $_GET['inicio'];
-$fim = $_GET['fim'];
-
 class PDF extends FPDF
 {
 // Page header
@@ -24,7 +21,7 @@ function Header()
 	$this->SetDrawColor(1,0,0);
 	$this->SetLineWidth(.1);
 	// Title
-	$this->Cell(0,2.2,utf8_decode('RELATÓRIO DE FREQUÊNCIAS'),1,0,'C');
+	$this->Cell(0,2.2,utf8_decode('Quantidade de Pessoas por Horário'),1,0,'C');
 	// Line break
 	$this->Ln(2);
 }
@@ -42,17 +39,12 @@ function Footer()
 }
 // Instanciation of inherited class
 
-$pdf = new PDF('p','cm','A4');
+$pdf = new PDF('P','cm','A4');
 $pdf->AliasNbPages();
 $pdf->AddPage();
 
 //Criando a conexão pelo PDO
-$sql = $pdo->prepare("SELECT u.nome, date_format( data_presenca, '%d/%m/%Y' ) , date_format( data_presenca, '%H:%i:%s' ) , f.funcionario
-FROM usuarios u
-JOIN frequencia f ON usuario_fk = id_usuario
-WHERE date_format( data_presenca, '%d-%m-%Y' ) >= '$inicio'
-AND date_format( data_presenca, '%d-%m-%Y' ) <= '$fim'
-ORDER BY  date_format( data_presenca, '%d-%m-%Y' ),date_format( data_presenca, '%H:%i:%s' ), u.nome ASC"); // consulta
+$sql = $pdo->prepare("select horario from usuarios;"); // consulta
 $sql->execute();// executar
 //Fim Criando a conexão pelo PDO
 
@@ -72,11 +64,9 @@ $hifen = '-' ;
 	//$pdf->Cell(0,1,utf8_decode('RELATÓRIO DE ENTRADAS DIÁRIAS'),1,1,'C',true);
 	$pdf->Cell(0,1,utf8_decode('LABORATÓRIO DO EXERCÍCIO - CURSO DE EDUCAÇÃO FÍSICA'),1,1,'C',true);
 	$pdf->Cell(0,1,utf8_decode('UNIMONTES '.$hifen.' CAMPUS AVANÇADO DE JANUÁRIA'),1,1,'C',false);
-	$pdf->Cell(0,1,utf8_decode('Período: '.$inicio.' à '.$fim),1,1,'C',true);
-	$pdf->Cell(8,1,'Cliente',1,0,'C',true);
-	$pdf->Cell(2.3,1,'Data',1,0,'C',true);
-	$pdf->Cell(2,1,utf8_decode('Horário'),1,0,'C',true);
-	$pdf->Cell(6.7,1,utf8_decode('Funcionário'),1,0,'C',true);
+	$pdf->Cell(6,1,utf8_decode('Turno'),1,0,'C',true);
+	$pdf->Cell(7,1,utf8_decode('Horário'),1,0,'C',true);
+	$pdf->Cell(6,1,utf8_decode('Quantidade'),1,0,'C',true);
 	$pdf->Ln();
 	// Color and font restoration
 	$pdf->SetFillColor(224,235,255);
@@ -86,17 +76,44 @@ $hifen = '-' ;
 
 //exibindo os dados
 $fill = false;
+$h1 = 0;
+$h2 = 0;
+$h3 = 0;
+$h4 = 0;
 foreach($sql as $resultado){
-	$pdf->Cell(8,1,utf8_decode(utf8_encode($resultado["nome"])),'LR',0,'L',$fill);
-	$pdf->Cell(2.3,1,$resultado["date_format( data_presenca, '%d/%m/%Y' )"],'LR',0,'C',$fill);
-	$pdf->Cell(2,1,$resultado["date_format( data_presenca, '%H:%i:%s' )"],'LR',0,'C',$fill);
-	$pdf->Cell(6.7,1,utf8_decode($resultado['funcionario']),'LR',0,'L',$fill);
-	$pdf->Ln();
-	$fill = !$fill;
+		if($resultado['horario']==1){
+			$h1++;
+		}elseif($resultado['horario']==2){
+			$h2++;
+		}elseif($resultado['horario']==3){
+			$h3++;
+		}elseif($resultado['horario']==4){
+			$h4++;
+		}
 	}
+	if($h1==1 || $h1==0){$p = 'pessoa';}else{$p = 'pessoas';};
+	$pdf->Cell(6,1,utf8_decode('1º Turno'),'LR',0,'C',true);
+	$pdf->Cell(7,1,utf8_decode('6h às 9h'),'LR',0,'C',true);
+	$pdf->Cell(6,1,$h1.' '.$p,'LR',0,'C',true);
+	$pdf->Ln();
+	if($h2==1 || $h2==0){$p = 'pessoa';}else{$p = 'pessoas';};
+	$pdf->Cell(6,1,utf8_decode('2º Turno'),'LR',0,'C',false);
+	$pdf->Cell(7,1,utf8_decode('9h às 12h'),'LR',0,'C',false);
+	$pdf->Cell(6,1,$h2.' '.$p,'LR',0,'C',false);
+	$pdf->Ln();
+	if($h3==1 || $h3==0){$p = 'pessoa';}else{$p = 'pessoas';};
+	$pdf->Cell(6,1,utf8_decode('3º Turno'),'LR',0,'C',true);
+	$pdf->Cell(7,1,utf8_decode('15h às 18h'),'LR',0,'C',true);
+	$pdf->Cell(6,1,$h3.' '.$p,'LR',0,'C',true);
+	$pdf->Ln();
+	if($h4==1 || $h4==0){$p = 'pessoa';}else{$p = 'pessoas';};
+	$pdf->Cell(6,1,utf8_decode('4º Turno'),'LR',0,'C',false);
+	$pdf->Cell(7,1,utf8_decode('18h às 21h'),'LR',0,'C',false);
+	$pdf->Cell(6,1,$h4.' '.$p,'LR',0,'C',false);
+	$pdf->Ln();
 	$pdf->Cell(19,0,'','T');
 //Fim exibindo os dados
-$nome_relatorio = 'Relatório de Frequências '.$inicio.' à '.$fim.'.pdf';
+$nome_relatorio = 'Relatório de Horários '.date('d-m-Y').'.pdf';
 $pdf->Output($nome_relatorio,'I');
 
 ?>

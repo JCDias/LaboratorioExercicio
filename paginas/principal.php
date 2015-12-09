@@ -17,6 +17,12 @@
 	$mensalidades = mysql_fetch_array($mens);
 	//Fim Selecionar mensalidades em aberto
 	
+	//Selecionar responsáveis menor de idade
+	$sql_resp = "select count(*) from usuarios where TIMESTAMPDIFF(DAY, data_nasc, current_date) <=6573 and 0 = (select count(*) from responsavel where usuario_fk = id_usuario)order by nome ASC;";
+	$resp = mysql_query($sql_resp,$db);
+	$responsavel = mysql_fetch_array($resp);
+	//Fim Selecionar responsáveis menor de idade
+	
 ?>
 
 <!-- breadcrumb -->
@@ -43,7 +49,7 @@
     </div>
 </div>
 <!-- Fim Barra que divide a imagem dos outros conteúdos -->
-    
+    <!-- Mensalidades -->
 	<?php if($mensalidades['count(*)']>0){ ?>
 	<div class="col-md-3 col-sm-3 col-xs-6">
         <a data-toggle="tooltip" title="<?php echo $mensalidades['count(*)']; if($mensalidades['count(*)']==1){echo " mensalidade vencida";}else{echo " mensalidades vencidas";}?>" class="well top-block" href="mensalidades_em_aberto.php">
@@ -54,16 +60,21 @@
         </a>
     </div>
 	<?php  }?>
-<!--
+	<!-- Mensalidades -->
+	
+	<!-- Responsavel -->
+	<?php if($responsavel['count(*)']>0){ ?>
     <div class="col-md-3 col-sm-3 col-xs-6">
-        <a data-toggle="tooltip" title="Avaliações Marcadas" class="well top-block" href="#">
-			<span><i class="glyphicon glyphicon-check green"></i></span>
-            <div>Avaliações Marcadas</div>
+        <a data-toggle="tooltip" title="<?php echo $responsavel['count(*)']; if($responsavel['count(*)']==1){echo " usuário menor de idade";}else{echo " usuários menores de idade";}?>" class="well top-block" href="consultar_lancar_responsavel.php">
+			<span><i class="glyphicon glyphicon-edit green"></i></span>
+            <div>Cadastrar Responsável</div>
 			<br/>
-            <span class="notification red">4</span>
+            <span class="notification red"><?php echo $responsavel['count(*)']?></span>
         </a>
     </div>
-
+	<?php  }?>
+	<!-- Responsavel -->
+<!--
     <div class="col-md-3 col-sm-3 col-xs-6">
         <a data-toggle="tooltip" title="Testes de Carga Marcados" class="well top-block" href="#">
 			<span><i class="glyphicon glyphicon-check green"></i></span>

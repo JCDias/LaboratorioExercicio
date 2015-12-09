@@ -7,7 +7,7 @@
 ?>
 <?php
 	require('cabecalho.php');
-	$sql = "select u.id_usuario,u.nome,u.celular, c.nome_categoria, u.tipo, horario from usuarios u join categorias c on u.categoria_fk = c.id_categoria order by nome;";
+	$sql = "select u.id_usuario,u.nome,u.celular, u.telefone, c.nome_categoria, u.tipo, horario from usuarios u join categorias c on u.categoria_fk = c.id_categoria order by nome;";
 	$res = mysql_query($sql,$db);
 ?>
 
@@ -79,7 +79,13 @@
 		echo "<tr>";
 	?>
 		<td><?php echo utf8_encode($linha['nome'])?></td>
-        <td class="center"><?php echo utf8_encode($linha['celular'])?></td>
+		<?php if($linha['celular']=='-'){
+			$tel = utf8_encode($linha['telefone']);
+		}else{
+			$tel = utf8_encode($linha['celular']);
+		}
+		?>
+        <td class="center"><?php echo $tel;?></td>
         <td class="center"><?php echo utf8_encode($linha['nome_categoria'])?></td>
         <td class="center"><?php echo utf8_encode($linha['tipo'])?></td>
 		<td class="center"><?php 

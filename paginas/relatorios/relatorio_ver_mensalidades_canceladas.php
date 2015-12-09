@@ -81,13 +81,13 @@ foreach($sql as $resultado){
 	$pdf->Cell(8.7,1,utf8_decode(utf8_encode($resultado['nome'])),'LR',0,'L',$fill);
 	$pdf->Cell(6,1,ucfirst(utf8_decode(utf8_encode($resultado['monthname(data_vencimento)'].' de '.$resultado['YEAR(data_vencimento)']))),'LR',0,'C',$fill);
 	$pdf->Cell(5,1,$resultado["date_format(data_pagamento,'%d/%m/%Y')"],'LR',0,'C',$fill);
-	$pdf->Cell(8,1,utf8_decode(utf8_encode($resultado['funcionario'])),'LR',0,'L',$fill);
+	$pdf->Cell(8,1,utf8_decode($resultado['funcionario']),'LR',0,'L',$fill);
 	$pdf->Ln();
 	$fill = !$fill;
 	}
 	$pdf->Cell(27.7,0,'','T');
 //Fim exibindo os dados
-
-$pdf->Output();
+$nome_relatorio = 'Relatório de Mensalidades Canceladas '.date('d-m-Y').'.pdf';
+$pdf->Output($nome_relatorio,'I');
 
 ?>

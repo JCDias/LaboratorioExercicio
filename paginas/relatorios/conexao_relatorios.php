@@ -1,3 +1,3 @@
 <?php
-		$pdo = new PDO('mysql:host=localhost; dbname=laboratorio','root','2863');//Conexão
+		$pdo = new PDO('mysql:host=localhost; dbname=laboratorio','root','senha');//Conexão
 ?>

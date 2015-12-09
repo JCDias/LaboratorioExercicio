@@ -86,13 +86,13 @@ foreach($sql as $resultado){
 	$pdf->Cell(4,1,$resultado['desconto_a_receber'].'%','LR',0,'C',$fill);
 	$pdf->Cell(4,1,'R$ '.$resultado['valor_recebido'],'LR',0,'C',$fill);
 	$pdf->Cell(5,1,$resultado["date_format(data_pagamento,'%d/%m/%Y %H:%i:%s')"],'LR',0,'C',$fill);
-	$pdf->Cell(6.7,1,utf8_decode(utf8_encode($resultado['funcionario'])),'LR',0,'L',$fill);
+	$pdf->Cell(6.7,1,utf8_decode($resultado['funcionario']),'LR',0,'L',$fill);
 	$pdf->Ln();
 	$fill = !$fill;
 	}
 	$pdf->Cell(27.7,0,'','T');
 //Fim exibindo os dados
-
-$pdf->Output();
+$nome_relatorio = 'Relatório de Mensalidades Pagas '.date('d-m-Y').'.pdf';
+$pdf->Output($nome_relatorio,'I');
 
 ?>

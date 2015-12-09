@@ -13,7 +13,7 @@
 	//Recebendo valores do post
 	$usuario_fk = utf8_decode($_POST['usuario_fk']);
 	$nome = utf8_decode($_POST['nome']);
-	$tipo = utf8_decode($_POST['tipo']);
+	$tipo = utf8_decode($_POST['tipo_lancamento']);
 	$valor = utf8_decode($_POST['valor']);
 	$funcionario = utf8_decode($_POST['funcionario']);
 	//Fim Recebendo valores do post
@@ -22,7 +22,33 @@
 	$sql = "INSERT INTO `caixa`(`usuario_fk`, `nome_usuario`, `tipo`, `data_recebimento`, `funcionario`,`valor_recebido`) VALUES ($usuario_fk,'$nome','$tipo',now(),'$funcionario','$valor');";
 	//Fim Preparar consulta para inserir
 	
-	$confirmar = mysql_query($sql, $db);
+	// Inserir na tabela mensalidade a primeira mensalidade
+	if($tipo=='Mensalidade'){
+		$usu = mysql_fetch_array(mysql_query("select * from usuarios where id_usuario = $usuario_fk",$db));
+		//Verificar desconto
+		if($valor == '37.50'){
+			$desc = '25.00';
+		}else{
+			$desc = '0.00';
+		}
+		//Fim Verificar desconto
+		$categoria = $usu['categoria_fk'];
+		$horario = $usu['horario'];
+		$insert_mens = "INSERT INTO `mensalidade`(`usuario_fk`, `nome_usuario_fk`, `data_vencimento`, `categoria_fk`, `horario_usuario`, `valor_a_receber`, `desconto_a_receber`, `valor_recebido`, `data_pagamento`, `funcionario`, `status_pagamento`) VALUES ($usuario_fk,'$nome', now(),$categoria,$horario,'$valor','$desc','$valor',now(),'$funcionario','pago')";
+		
+		$mens = mysql_query($insert_mens,$db);
+		
+		if($mens == 1){
+			$confirmar = mysql_query($sql, $db);
+		}else{
+			$confirmar = 0;
+		}
+	}else{
+		$confirmar = mysql_query($sql, $db);
+	}
+	// Fim Inserir na tabela mensalidade a primeira mensalidade
+	
+	
 	
 	//Mensagem de sucesso ou erro
 	if($confirmar == 1){

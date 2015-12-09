@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
 		header ('Content-type: text/html; charset=UTF-8');
 		setlocale(LC_ALL, "pt_BR", "pt_BR.iso-8859-1", "pt_BR.utf-8", "portuguese");
 		date_default_timezone_set('America/Sao_Paulo');
@@ -38,7 +38,7 @@
             <a href="#">Mensalidades</a>
         </li>
 		<li>
-            <a href="mensalidades_em_aberto.php">Mensalidades Vencidas</a>
+            <a href="mensalidades_em_aberto.php">Mensalidades Abertas</a>
         </li>
     </ul>
 </div>
@@ -47,7 +47,7 @@
     <div class="box col-md-12">
     <div class="box-inner">
     <div class="box-header well" data-original-title="">
-        <h2><i class="glyphicon glyphicon-fullscreen"></i> Mensalidades Vencidas</h2>
+        <h2><i class="glyphicon glyphicon-fullscreen"></i> Mensalidades Abertas</h2>
     </div>
     <div class="box-content">
 	<?php if(mysql_num_rows($res)>0){?>
@@ -75,14 +75,16 @@
 			$cat = $linha['categoria_fk'];
 			if(date('d')<=10 and ($cat==2 or $cat==3 or $cat==4 or $cat==7 or $cat==8 or $cat==9)){
 				//Condições para oferecer desconto para as categorias específicas
-				$desc = number_format(25, 2, '.', '');			
+				$desc = number_format(25, 2, '.', '');
+				$valor_a_receber = '37.50';
 				// no lugar do 23 criar tabela pra salvar o valor do desconto para não mexer no código depois e fazer select para buscar esse valor
 			}else{
+				$valor_a_receber = $linha['valor_a_receber'];
 				$desc = $linha['desconto_a_receber'];
 			}
 			$valor = $linha['valor_a_receber'];
-			$calculo= $valor - (($valor * $desc)/100);
-			$valor_a_receber = number_format($calculo, 2, '.', '');
+			//$calculo= $valor - (($valor * $desc)/100);
+			//$valor_a_receber = number_format($calculo, 2, '.', '');
 		?>
 		 <td class="center"><?php echo $desc?> %</td>
 		<td class="center">R$ <?php echo $valor_a_receber; $valor_a_receber = '';?></td>

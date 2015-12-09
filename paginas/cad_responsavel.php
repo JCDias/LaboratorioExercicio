@@ -196,7 +196,7 @@ function exibirCampos(valor){
     <div class="box col-md-7">
         <div class="box-inner">
             <div class="box-header well" data-original-title="">
-                <h2><i class="glyphicon glyphicon-edit"></i> Cadastrar Responsável por <?php echo $nome;?></h2>
+                <h2><i class="glyphicon glyphicon-edit"></i> Cadastrar Responsável por <?php echo utf8_encode($nome);?></h2>
             </div>
             <div class="box-content">
                 <div class="control-group">
@@ -224,13 +224,13 @@ function exibirCampos(valor){
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<label>Celular:</label>
-							<input type="text" name="celular" id="celular" class="form-control" placeholder="(00) 0000-0000"  required/>
+							<input type="text" name="celular" id="celular" class="form-control" placeholder="(00) 0000-0000"  />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						</div>
 						<br/>
 						<div class="form-group" >	
 							<label>Grau de Parentesco:</label>
-								<select name="grau" data-rel="chosen" onchange="exibirCampos(this.value);"required>
+								<select name="grau" data-rel="chosen" onchange="exibirCampos(this.value);" required >
 									<option value="">Selecione ...</option>
 									<option value="Mãe">Mãe</option>
 									<option value="Pai">Pai</option>
@@ -252,6 +252,7 @@ function exibirCampos(valor){
 						<br/>
 						<button type="submit" class="btn btn-success">Cadastrar</button>
 						<a href="cad_responsavel.php?id=<?php echo $id;?>&nome=<?php echo $nome;?>"><button class="btn btn-info">Limpar</button></a>
+						<a href="principal.php" class="btn btn-success">Voltar</a>
 					</form>
                 </div>
                 

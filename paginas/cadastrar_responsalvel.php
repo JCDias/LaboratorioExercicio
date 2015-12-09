@@ -38,9 +38,13 @@
 	$sql_inserir = "INSERT INTO `responsavel`(`nome_responsavel`, `cpf`, `rg`, `data_nasc`, `usuario_fk`, `parentesco`, `telefone`, `celular`, `data_cadastro`, `funcionario`) VALUES ('$nome','$cpf','$rg','$data_nasc',$usuario,'$grau','$telefone','$celular','$data_cad','$funcionario');";
 	//Fim Preparar consulta para inserir
 	
-	$sql = "select count(cpf) from responsavel where cpf = '$cpf';";
-	$consulta = mysql_query($sql,$db);
-	$res = mysql_fetch_array($consulta);
+	if($cpf !=''){
+		$sql = "select count(cpf) from usuarios where cpf = '$cpf';";
+		$consulta = mysql_query($sql,$db);
+		$res = mysql_fetch_array($consulta);
+	}else{
+		$res['count(cpf)'] = 0;
+	}
 	
 	if($res['count(cpf)']<=0){	
 		//Inserir usuário

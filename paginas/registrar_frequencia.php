@@ -5,7 +5,7 @@
 <?php
 	require('cabecalho.php');
 	
-	$sql = "select u.id_usuario,u.nome,u.celular, c.nome_categoria, u.tipo, horario from usuarios u join categorias c on u.categoria_fk = c.id_categoria order by nome;";
+	$sql = "select u.id_usuario,u.nome,u.celular, c.nome_categoria, u.tipo, horario from usuarios u join categorias c on u.categoria_fk = c.id_categoria where tipo != 'Inativo' and tipo != 'Outro' order by nome;";
 	$res = mysql_query($sql,$db);
 ?>
 

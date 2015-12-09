@@ -8,7 +8,7 @@
 <?php
 	require('cabecalho.php');
 	
-	$sql = "select u.nome, r.id_responsavel, r.nome_responsavel, r.telefone from usuarios u join responsavel r on u.id_usuario = r.usuario_fk order by r.nome_responsavel;";
+	$sql = "select u.nome, r.id_responsavel, r.nome_responsavel, r.telefone, r.celular from usuarios u join responsavel r on u.id_usuario = r.usuario_fk order by r.nome_responsavel;";
 	
 	$res = mysql_query($sql,$db);
 ?>
@@ -73,7 +73,15 @@
 	?>
 		<td><?php echo utf8_encode($linha['nome_responsavel'])?></td>
         <td class="center"><?php echo utf8_encode($linha['nome'])?></td>
-        <td class="center"><?php echo utf8_encode($linha['telefone'])?></td>
+		
+		<?php 
+			if($linha['celular']==''){
+				$tel = utf8_encode($linha['telefone']);
+			}else{
+				$tel = utf8_encode($linha['celular']);
+			}
+		?>
+        <td class="center"><?php echo $tel;?></td>
 		</td>
         <td class="center">
             <a class="btn btn-danger" href="javascript:excluir(id=<?php echo utf8_encode($linha['id_responsavel'])?>)">

@@ -76,17 +76,17 @@ function trazconteudo()
             <a href="principal.php">Início</a>
         </li>
         <li>
-            <a href="#">Frequência</a>
+            <a href="#">Responsável</a>
         </li>
 		<li>
-            <a href="consultar_frequencia.php">Consultar</a>
+            <a href="consultar_lancae_responsavel.php">Consultar</a>
         </li>
     </ul>
 </div>
 <!-- Fim breadcrumb -->
 
 <!-- Conteúdo da página  - Painel de Busca -->
-<div class="row" id="painel_Busca" style="display:inline">
+<!--<div class="row" id="painel_Busca" style="display:inline">
     <div class="box col-md-8">
         <div class="box-inner">
             <div class="box-header well">
@@ -109,8 +109,51 @@ function trazconteudo()
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!-- Fim Conteúdo da página - Painel de Busca-->
+<?php
+		$sql = "select nome, id_usuario, TIMESTAMPDIFF(YEAR, data_nasc, current_date) from usuarios where TIMESTAMPDIFF(DAY, data_nasc, current_date) <=6573 and 0 = (select count(*) from responsavel where usuario_fk = id_usuario)order by nome ASC;";
+		
+		
+		$query = mysql_query($sql);
+		
+		if(mysql_num_rows($query)> 0){ ?>
+			<!-- Striped table -->
+		<div class="row">
+			<div class="box col-md-7">
+				<div class="box-inner">
+					<div class="box-header well" data-original-title="">
+						<h2>Cadastrar Responsável</h2>
+					</div>
+					<div class="box-content">
+						<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+							<thead>
+							<tr>
+								<th style="width:50%">Nome</th>
+								<th style="width:30%">Idade</th>
+								<th style="width:20%">Opção</th>
+							</tr>
+							</thead>
+							<tbody>
+							<?php while($linha = mysql_fetch_array ($query)): 
+								echo "<tr>";
+							?>
+								<td class="center"><?php echo utf8_encode($linha['nome'])?></td>
+								<td class="center"><?php echo utf8_encode($linha['TIMESTAMPDIFF(YEAR, data_nasc, current_date)'])?> anos</td>
+								<td class="center"><a href="cad_responsavel.php?id=<?php echo utf8_encode($linha['id_usuario']);?>&nome=<?php echo utf8_encode($linha['nome']);?>" class="btn btn-primary">Selecionar</a></td>
+							</tr>
+							<?php endwhile; ?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Striped table -->
+		<?php
+		}else{
+			echo 'Nenhum registro encontrado!';
+			}?>
 
 <?php
 	endif;

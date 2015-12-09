@@ -5,7 +5,7 @@
 	
 	if($busca != "") {
 		
-		$sql = "select id_usuario, nome from usuarios where nome like '%$busca%' and tipo='Mensalista' order by nome ASC;";
+		$sql = "select id_usuario, nome from usuarios where nome like '%$busca%' and tipo!='Diarista' order by nome ASC;";
 		
 		
 		$query = mysql_query($sql);

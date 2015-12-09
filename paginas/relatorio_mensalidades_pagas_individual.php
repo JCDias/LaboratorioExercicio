@@ -13,7 +13,7 @@
 	$id = $_GET['id'];
 	
 	// fazer consulta na tabela caixa quando data pagamento for do ano atual ordenar por ordem decrescente
-	$sql = "select *, nome, date_format(data_vencimento,'%d/%m/%Y'), date_format(data_pagamento,'%d/%m/%Y') from mensalidade join usuarios on usuario_fk = id_usuario where usuario_fk = $id and status_pagamento = 'pago' order by data_pagamento desc;";
+	$sql = "select *,mensalidade.funcionario, nome, date_format(data_vencimento,'%d/%m/%Y'), date_format(data_pagamento,'%d/%m/%Y') from mensalidade join usuarios on usuario_fk = id_usuario where usuario_fk = $id and status_pagamento = 'pago' order by data_pagamento desc;";
 	
 	$res = mysql_query($sql,$db);
 ?>
@@ -81,7 +81,7 @@
                             <td class="center"><?php echo $linha["date_format(data_vencimento,'%d/%m/%Y')"];?></td>
                             <td class="center"><?php echo $linha["date_format(data_pagamento,'%d/%m/%Y')"];?></td>
                             <td class="center">R$ <?php echo $linha['valor_recebido'];?></td>
-                            <td class="center"><?php echo utf8_encode($linha['funcionario']);?></td>
+                            <td class="center"><?php echo utf8_encode(utf8_decode($linha['funcionario']));?></td>
 						</tr>
 						<?php endwhile;?>
                         </tbody>

@@ -2,6 +2,12 @@
 require('FPDF/fpdf.php');
 require('conexao_relatorios.php');
 
+//Definindo Data
+setlocale(LC_TIME, 'portuguese');
+date_default_timezone_set('America/Sao_Paulo');
+$date = date('d-m-Y');
+$data =  strftime("%A, %d de %B de %Y", strtotime($date));
+$hora = date('H:i:s');
 class PDF extends FPDF
 {
 // Page header
@@ -36,7 +42,7 @@ $pdf = new PDF('p','cm','A4');
 $pdf->AliasNbPages();
 
 //Criando a conexão pelo PDO
-$sql = $pdo->prepare("select * , date_format(data_nasc, '%d/%m/%Y'), c.nome_categoria from usuarios join categorias c on categoria_fk = c.id_categoria order by nome"); // consulta
+$sql = $pdo->prepare("select * , date_format(data_cadastro, '%d/%m/%Y - %H:%i:%s'),date_format(data_nasc, '%d/%m/%Y'), c.nome_categoria from usuarios join categorias c on categoria_fk = c.id_categoria order by nome"); // consulta
 $sql->execute();// executar
 //Fim Criando a conexão pelo PDO
 
@@ -48,10 +54,20 @@ $sql->execute();// executar
 	$pdf->SetLineWidth(.1);
 	$pdf->SetFont('Times','B',12);
 //exibindo os dados
+
+//Inserir hífen
+$hifen = '-' ;
+//Fim Inserir hífen
 $L1 = 5;
 $L2 = 14;
+$total = 0;
+$mens = 0;
+$diarista = 0;
+$outro = 0;
+$inativo = 0;
 foreach($sql as $resultado){
 	$pdf->AddPage();
+	$total++;
 	$pdf->Cell($L1,1,utf8_decode('Matrícula: '),1,0,'R',true);
 	$pdf->Cell($L2,1,str_pad($resultado['id_usuario'],"4","0", STR_PAD_LEFT),1,0,'L');
 	$pdf->Ln();
@@ -72,7 +88,7 @@ foreach($sql as $resultado){
 	$pdf->Ln();
 	$pdf->Cell($L1,1,utf8_decode('Endereço: '),1,0,'R',true);
 	$pdf->Cell($L2,1,utf8_decode(utf8_encode($resultado['rua'])).', '
-	.utf8_decode(utf8_encode($resultado['numero'])).', '
+	.utf8_decode('nº '.utf8_encode($resultado['numero'])).', '
 	.utf8_decode(utf8_encode($resultado['complemento'])).', '
 	.utf8_decode(utf8_encode($resultado['bairro'])).', '
 	.utf8_decode(utf8_encode($resultado['cidade']))
@@ -98,6 +114,15 @@ foreach($sql as $resultado){
 	$pdf->Cell($L2,1,utf8_decode(utf8_encode($resultado['nome_categoria'])),1,0,'L');
 	$pdf->Ln();
 	$pdf->Cell($L1,1,'Tipo: ',1,0,'R',true);
+	if($resultado['tipo']=='Mensalista'){
+		$mens++;
+	}elseif($resultado['tipo']=='Diarista'){
+		$diarista++;
+	}elseif($resultado['tipo']=='Outro'){
+		$outro++;
+	}else{
+		$inativo++;
+	}
 	$pdf->Cell($L2,1,utf8_decode(utf8_encode($resultado['tipo'])),1,0,'L');
 	$pdf->Ln();
 	if($resultado['tipo']=='Mensalista'){
@@ -108,9 +133,39 @@ foreach($sql as $resultado){
 		$pdf->Cell($L2,1,utf8_decode(utf8_encode($resultado['horario']).'º Turno'),1,0,'L');
 		$pdf->Ln();
 	}
+	if($resultado['tipo']=='Inativo'){
+		$pdf->Cell($L1,1,'Inativo desde: ',1,0,'R',true);
+	}else{
+		$pdf->Cell($L1,1,'Data de Cadastro: ',1,0,'R',true);
+	}
+	$pdf->Cell($L2,1,utf8_decode(utf8_encode($resultado["date_format(data_cadastro, '%d/%m/%Y - %H:%i:%s')"])),1,0,'L');
+	$pdf->Ln();
+	$pdf->Cell($L1,1,utf8_decode('Funcionário: '),1,0,'R',true);
+	$pdf->Cell($L2,1,utf8_decode(utf8_encode($resultado["funcionario"])),1,0,'L');
+	$pdf->Ln();
 }
-
+	// Exibir totais ao fim do relatório
+	$pdf->AddPage();
+	$pdf->Cell(0,1,utf8_decode('Estatísticas '),1,0,'C',false);
+	$pdf->Ln();
+	$pdf->Cell($L1,1,utf8_decode('Total de Usuários: '),1,0,'R',true);
+	$pdf->Cell($L2,1,$total,1,0,'L');
+	$pdf->Ln();
+	$pdf->Cell($L1,1,utf8_decode('Total de Mensalistas: '),1,0,'R',true);
+	$pdf->Cell($L2,1,$mens,1,0,'L');
+	$pdf->Ln();
+	$pdf->Cell($L1,1,utf8_decode('Total de Diaristas: '),1,0,'R',true);
+	$pdf->Cell($L2,1,$diarista,1,0,'L');
+	$pdf->Ln();
+	$pdf->Cell($L1,1,utf8_decode('Outros: '),1,0,'R',true);
+	$pdf->Cell($L2,1,$outro,1,0,'L');
+	$pdf->Ln();
+	$pdf->Cell($L1,1,utf8_decode('Inativos: '),1,0,'R',true);
+	$pdf->Cell($L2,1,$inativo,1,0,'L');
+	$pdf->Ln();
+	$pdf->Cell(0,1,utf8_decode(utf8_encode(ucfirst($data)).' '.$hifen.' '.$hora),1,0,'C',false);
 //Fim exibindo os dados
-$pdf->Output();
+$nome_relatorio = 'Relatório de Todos os Usuários '.date('d-m-Y').'.pdf';
+$pdf->Output($nome_relatorio,'I');
 
 ?>

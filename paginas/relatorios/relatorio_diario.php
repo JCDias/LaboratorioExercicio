@@ -1,6 +1,7 @@
 ﻿<?php
 require('FPDF/fpdf.php');
 require('conexao_relatorios.php');
+require('../../conexao.php');
 
 //Definindo Data
 setlocale(LC_TIME, 'portuguese');
@@ -13,7 +14,7 @@ $turno = $_GET['turno'];
 
 if($turno == 1){
 	$h1 = '05:00:00';
-	$h2 = '13:00:00';
+	$h2 = '13:59:00';
 	$nome_turno = 'Turno: Matutino';
 }elseif($turno == 2){
 	$h1 = '14:00:00';
@@ -63,7 +64,7 @@ $pdf->AddPage();
 $sql = $pdo->prepare("select caixa.tipo, caixa.funcionario, valor_recebido, u.nome, date_format(data_recebimento,'%d/%m/%Y %H:%i:%s') 
 from caixa join usuarios u on u.id_usuario = usuario_fk 
 where date_format(data_recebimento,'%H:%i:%s') > '$h1' and date_format(data_recebimento,'%H:%i:%s') < '$h2' and date_format(data_recebimento,'%Y-%m-%d') = curdate()
-order by data_recebimento;"); // consulta
+order by u.nome;"); // consulta
 $sql->execute();// executar
 //Fim Criando a conexão pelo PDO
 
@@ -104,13 +105,21 @@ foreach($sql as $resultado){
 	$pdf->Cell(8,1,' '.$resultado['nome'],'LR',0,'L',$fill);
 	$pdf->Cell(4,1,$resultado['tipo'],'LR',0,'C',$fill);
 	$pdf->Cell(4,1,'R$ '.$resultado['valor_recebido'],'LR',0,'C',$fill);
-	$pdf->Cell(7.7,1,utf8_decode(utf8_encode(' '.$resultado['funcionario'])),'LR',0,'L',$fill);
+	$pdf->Cell(7.7,1,utf8_decode(' '.$resultado['funcionario']),'LR',0,'L',$fill);
 	$pdf->Ln();
 	$fill = !$fill;
 	}
-	$pdf->Cell(27.7,0,'','T');
+	//Exibir a soma
+	$sum = "select sum(valor_recebido) from caixa join usuarios u on u.id_usuario = usuario_fk 
+	where date_format(data_recebimento,'%H:%i:%s') > '$h1' and date_format(data_recebimento,'%H:%i:%s') < '$h2' and date_format(data_recebimento,'%Y-%m-%d') = curdate();";
+	$soma = mysql_fetch_array(mysql_query($sum, $db));
+	$pdf->Cell(20,1,'Total Recebido: ',1,0,'R',true);
+	$pdf->Cell(7.7,1,'R$ '.$soma['sum(valor_recebido)'],1,1,'C');
+	//Exibir a soma
+	//$pdf->Cell(27.7,0,'','T');
 //Fim exibindo os dados
 
-$pdf->Output();
+$nome_relatorio = 'Relatório Diário '.date('d-m-Y').'.pdf';
+$pdf->Output($nome_relatorio,'I');
 
 ?>
